@@ -1,20 +1,27 @@
 # 06 - React Router, Server-Side Rendering, and Helmet
 
 Code for this chapter available [here](https://github.com/verekia/js-stack-walkthrough/tree/master/06-react-router-ssr-helmet).
+この章で扱うコードは[こちら](https://github.com/verekia/js-stack-walkthrough/tree/master/06-react-router-ssr-helmet)です。
 
 In this chapter we are going to create different pages for our app and make it possible to navigate between them.
+この章ではページを複数作り、ページ間を移動する方法について紹介します。
 
 ## React Router
 
 > 💡 **[React Router](https://reacttraining.com/react-router/)** is a library to navigate between pages in your React app. It can be used on both the client and the server.
+> 💡 **[React Router](https://reacttraining.com/react-router/)** はReactでページ間を移動するためのライブラリーです。サーバー側とクライアント側の両方で動きます。
 
 React Router has received a major update with its v4 release which is still in beta. Since I want this tutorial to be future-proof, we'll be using v4.
+React Routerはv4（β版）でメジャーアップデートを行いました。このチュートリアルでは将来的にも使いやすいようにv4を使っていきます。
 
 - Run `yarn add react-router@next react-router-dom@next`
+- `yarn add react-router@next react-router-dom@next` を実行します
 
 On the client side, we first need to wrap our app inside a `BrowserRouter` component.
+まず、クライアント側ではBrowserRouterでappを囲います
 
 - Update your `src/client/index.jsx` like so:
+- `src/client/index.jsx` をこのように変更します:
 
 ```js
 // [...]
@@ -33,13 +40,19 @@ const wrapApp = (AppComponent, reduxStore) =>
 ## Pages
 
 Our app will have 4 pages:
+ページを4つ作ります:
 
 - A Home page.
+- ホームページ
 - A Hello page showing a button and message for the synchronous action.
+- 同期的にメッセージとボタンを表示するデモページ
 - A Hello Async page showing a button and message for the asynchronous action.
+- 非同期的にメッセージとボタンを表示するデモページ
 - A 404 "Not Found" page.
+- 404 "Not Found" ページ
 
 - Create a `src/client/component/page/home.jsx` file containing:
+- `src/client/component/page/home.jsx` を次のように作成します:
 
 ```js
 // @flow
@@ -52,6 +65,7 @@ export default HomePage
 ```
 
 - Create a `src/client/component/page/hello.jsx` file containing:
+- `src/client/component/page/hello.jsx` を次のように作成します:
 
 ```js
 // @flow
@@ -72,6 +86,7 @@ export default HelloPage
 ```
 
 - Create a `src/client/component/page/hello-async.jsx` file containing:
+- `src/client/component/page/hello-async.jsx` を次のように作成します:
 
 ```js
 // @flow
@@ -91,6 +106,7 @@ export default HelloAsyncPage
 ```
 
 - Create a `src/client/component/page/not-found.jsx` file containing:
+- `src/client/component/page/not-found.jsx` を次のように作成します:
 
 ```js
 // @flow
@@ -105,8 +121,10 @@ export default NotFoundPage
 ## Navigation
 
 Let's add some routes in the shared config file.
+共有設定ファイルにルートを追加していきましょう。
 
 - Edit your `src/shared/routes.js` like so:
+- `src/shared/routes.js` を次のように編集します:
 
 ```js
 // @flow
@@ -120,8 +138,10 @@ export const helloEndpointRoute = (num: ?number) => `/ajax/hello/${num || ':num'
 ```
 
 The `/404` route is just going to be used in a navigation link for the sake of demonstrating what happens when you click on a broken link.
+ルート`/404`は存在しないリンクをクリックした時に何が起きるか見るためのデモ用のリンクになります。
 
 - Create a `src/client/component/nav.jsx` file containing:
+- `src/client/component/nav.jsx` を次のように作成します:
 
 ```js
 // @flow
@@ -155,6 +175,7 @@ export default Nav
 ```
 
 Here we simply create a bunch of `NavLink`s that use the previously declared routes.
+ここではシンプルに上記で宣言したルートを使用するための`NavLink`を作成していきます。
 
 - Finally, edit `src/client/app.jsx` like so:
 
@@ -192,16 +213,22 @@ export default App
 ```
 
 🏁 Run `yarn start` and `yarn dev:wds`. Open `http://localhost:8000`, and click on the links to navigate between our different pages. You should see the URL changing dynamically. Switch between different pages and use the back button of your browser to see that the browsing history is working as expected.
+🏁 `yarn start` と `yarn dev:wds` を実行して `http://localhost:8000` を開いて、リンクをクリックしてページ間を移動してみましょう。URLが動的に変更されているのが分かると思います。ページ間をいくつか移動したらブラウザの戻るボタンを押してみて、閲覧履歴が期待通りに動いていることを確認してみてください。
 
 Now, let's say you navigated to `http://localhost:8000/hello` this way. Hit the refresh button. You now get a 404, because our Express server only responds to `/`. As you navigated between pages, you were actually only doing it on the client-side. Let's add server-side rendering to the mix to get the expected behavior.
+例えば、今 `http://localhost:8000/hello` に移動したとしましょう。更新ボタンを押してみてください。そうすると、404ページが表示されます。なぜなら現状ではExpressサーバーは`/`にだけ反応するようになっているからです。ページ間の移動がクライアント側でしか行われていなかったということです。それではサーバーサイドレンダリングを導入して、期待通りに動作になるようにしましょう。
 
 ## Server-Side Rendering
+## サーバーサイドレンダリング
 
 > 💡 **Server-Side Rendering** means rendering your app at the initial load of the page instead of relying on JavaScript to render it in the client's browser.
+> 💡 **サーバーサイドレンダリング** はクライアント側のブラウザのJavaScriptによるページ描画に頼ることなく、最初にページを読み込んだ時点でアプリケーションが読み込まれることを意味します。
 
 SSR is essential for SEO and provides a better user experience by showing the app to your users right away.
+SSR (Server Side Rendering) はSEO対策には必須であり、素早くアプリケーションを表示することが出来るので、ユーザーエクスペリエンスが向上します。
 
 The first thing we're going to do here is to migrate most of our client code to the shared / isomorphic / universal part of our codebase, since the server is now going to render our React app too.
+まず最初にすることはクライアント側のコードの大部分を shared (isomorphic, universal) に移動させて、サーバー側でもReactアプリケーションを描画できるようにすることです。
 
 ### The big migration to `shared`
 
