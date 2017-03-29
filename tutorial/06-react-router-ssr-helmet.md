@@ -233,18 +233,24 @@ The first thing we're going to do here is to migrate most of our client code to 
 ### The big migration to `shared`
 
 - Move all the files located under `client` to `shared`, except `src/client/index.jsx`.
+- `src/client/index.jsx` 以外の `client` 以下のすべてのファイルを `shared` に移動します
 
 We have to adjust a whole bunch of imports:
+各importを対応させます:
 
 - In `src/client/index.jsx`, replace the 3 occurrences of `'./app'` by `'../shared/app'`, and `'./reducer/hello'` by `'../shared/reducer/hello'`
+- `src/client/index.jsx` では `'./app'` を `'../shared/app' `に、 `'./reducer/hello'` を `'../shared/reducer/hello'` に変更します
 
 - In `src/shared/app.jsx`, replace `'../shared/routes'` by `'./routes'` and `'../shared/config'` by `'./config'`
+- `src/shared/app.jsx` では `'./routes'` を `'../shared/routes'` に `'./config'` を `'../shared/config'` に変更します
 
 - In `src/shared/component/nav.jsx`, replace `'../../shared/routes'` by `'../routes'`
+- `src/shared/component/nav.jsx` では `'../routes'` を `'../../shared/routes'` に変更します
 
 ### Server changes
 
 - Create a `src/server/routing.js` file containing:
+- `src/server/routing.js` を次のように作成します:
 
 ```js
 // @flow
@@ -300,10 +306,13 @@ export default (app: Object) => {
 ```
 
 This file is where we deal with requests and responses. The calls to business logic are externalized to a different `controller` module.
+このファイルでリクエストとレスポンスの処理を扱います。ここでは処理の呼び出しだけして、実際の処理の中身は `controller` に書きます。
 
 **Note**: You will find a lot of React Router examples using `*` as the route on the server, leaving the entire routing handling to React Router. Since all requests go through the same function, that makes it inconvenient to implement MVC-style pages. Instead of doing that, we're here explicitly declaring the routes and their dedicated responses, to be able to fetch data from the database and pass it to a given page easily.
+**Note**: 多くのReact Routerの例ではサーバー側のルートの定義で`*`を使用して、ルーティングの処理をReact Routerに全て任せています。それだと全てのリクエストが同じ関数を通ることになるので、MVCスタイルのページの実装には向いていません。なので、ここではデータベースから取得したデータをページに簡単に組み込むために、ルートの定義とそれに対するレスポンスを明示的に定義します。
 
 - Create a `src/server/controller.js` file containing:
+- `src/server/controller.js` を次のように作成します:
 
 ```js
 // @flow
@@ -324,8 +333,10 @@ export const helloEndpoint = (num: number) => ({
 ```
 
 Here is our controller. It would typically make business logic and database calls, but in our case we just hard-code some results. Those results are passed back to the `routing` module to be used to initialize our server-side Redux store.
+これがコントローラーです。本来ならここでビジネスロジックやデーターベースにアクセスする処理を書きますが、一旦ここでは期待される結果をハードコーディングします。これらの処理の結果は `routing` モジュールに渡され、サーバーサイドのReduxストアを初期化するのに使われます。
 
 - Create a `src/server/init-store.js` file containing:
+- `src/server/init-store.js` を次のように作成します:
 
 ```js
 // @flow
@@ -353,8 +364,10 @@ export default initStore
 ```
 
 The only thing we do here, besides calling `createStore` and applying middleware, is to merge the plain JS object we received from the `controller` into a default Redux state containing Immutable objects.
+ここでは単に、`createStore` を呼び出してミドルウェアを追加して、`controller` から受け取った生のJSオブジェクトを、ReduxストアのImmutableオブジェクトにマージしています。
 
 - Edit `src/server/index.js` like so:
+- `src/server/index.js` を次のように編集します:
 
 ```js
 // @flow
@@ -382,8 +395,10 @@ app.listen(WEB_PORT, () => {
 ```
 
 Nothing special here, we just call `routing(app)` instead of implementing routing in this file.
+特に変わったことはしていません。このファイルにルートを定義するのではなく、`routing(app)` を呼び出している点に注意して下さい。
 
 - Rename `src/server/render-app.js` to `src/server/render-app.jsx` and edit it like so:
+- `src/server/render-app.js` を `src/server/render-app.jsx` に名前を変更して次のように編集します:
 
 ```js
 // @flow
@@ -429,10 +444,13 @@ export default renderApp
 ```
 
 `ReactDOMServer.renderToString` is where the magic happens. React will evaluate our entire `shared` `App`, and return a plain string of HTML elements. `Provider` works the same as on the client, but on the server, we wrap our app inside `StaticRouter` instead of `BrowserRouter`. In order to pass the Redux store from the server to the client, we pass it to `window.__PRELOADED_STATE__` which is just some arbitrary variable name.
+`ReactDOMServer.renderToString` では魔法が起こっています。Reactは `shared` `App` を読み込んで、素のHTML文字列を返します。`Provider` はクライアント側と同じように動作しますが、サーバー側ではアプリケーション全体を `BrowserRouter` ではなく、 `StaticRouter` で囲います。また、`window.__PRELOADED_STATE__` （変数名は何でも良い）を経由して、Reduxストアをサーバー側からクライアント側に渡しています。
 
 **Note**: Immutable objects implement the `toJSON()` method which means you can use `JSON.stringify` to turn them into plain JSON strings.
+**Note**: Immutableオブジェクトは `toJSON()` メソッドを実装しています。つまり `JSON.stringify` を使って素のJSON文字列を得ることが出来ます。
 
 - Edit `src/client/index.jsx` to use that preloaded state:
+- `src/client/index.jsx` を次のように編集して、渡されたReduxストアを使用します:
 
 ```js
 import Immutable from 'immutable'
@@ -450,8 +468,10 @@ const store = createStore(combineReducers(
 ```
 
 Here with feed our client-side store with the `preloadedState` that was received from the server.
+ここではサーバー側から渡された `preloadedState` をクライアント側のストアに渡しています。
 
 🏁 You can now run `yarn start` and `yarn dev:wds` and navigate between pages. Refreshing the page on `/hello`, `/hello-async`, and `/404` (or any other URI), should now work correctly. Notice how the `message` and `messageAsync` vary depending on if you navigated to that page from the client or if it comes from server-side rendering.
+🏁 `yarn start` と `yarn dev:wds` を実行してページ間を移動してみましょう。`/hello` や、 `/hello-async` や、 `/404` （または適当なURL）でページを更新してみましょう。今度は正しく動作するはずです。クライアント側でページ間を移動してきたか、サーバーサイドレンダリングによって読み込まれたかによって `message` と `messageAsync` の動作が異なっていることに注目して下さい。
 
 ### React Helmet
 
