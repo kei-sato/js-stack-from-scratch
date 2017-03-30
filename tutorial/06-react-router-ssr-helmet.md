@@ -476,12 +476,15 @@ Here with feed our client-side store with the `preloadedState` that was received
 ### React Helmet
 
 > 💡 **[React Helmet](https://github.com/nfl/react-helmet)**: A library to inject content to the `head` of a React app, on both the client and the server.
+> 💡 **[React Helmet](https://github.com/nfl/react-helmet)**: Reactアプリケーションの `head` の中に項目を挿入するライブラリです。クライアント側とサーバー側の両方で動作します。
 
 I purposely made you write `FIX ME` in the title to highlight the fact that even though we are doing server-side rendering, we currently do not fill the `title` tag properly (or any of the tags in `head` that vary depending on the page you're on).
+サーバーサイドレンダリングをしている一方で、`title`タグ（またはページ間で動的に変わる全ての`head`項目）を正しく書き換えていなかったので、そこに注目するためにあえて`FIX ME`と書いていました。
 
 - Run `yarn add react-helmet`
+- `yarn add react-helmet` を実行します
 
-- Edit `src/server/render-app.jsx` like so:
+- `src/server/render-app.jsx` を次のように編集します:
 
 ```js
 import Helmet from 'react-helmet'
@@ -506,8 +509,9 @@ const renderApp = (/* [...] */) => {
 ```
 
 React Helmet uses [react-side-effect](https://github.com/gaearon/react-side-effect)'s `rewind` to pull out some data from the rendering of our app, which will soon contain some `<Helmet />` components. Those `<Helmet />` components are where we set the `title` and other `head` details for each page.
+React Helmet は [react-side-effect](https://github.com/gaearon/react-side-effect) の `rewind` を使って `<Helmet />` を含むレンダリング結果からデータを抜き出します。この `<Helmet />` コンポーネントの中に各ページ毎の `title` や他の `head` 項目が含まれています。
 
-- Edit `src/shared/app.jsx` like so:
+- `src/shared/app.jsx` を次のように編集します:
 
 ```js
 import Helmet from 'react-helmet'
@@ -519,7 +523,7 @@ const App = () =>
     // [...]
 ```
 
-- Edit `src/shared/component/page/home.jsx` like so:
+- `src/shared/component/page/home.jsx` を次のように編集します:
 
 ```js
 // @flow
@@ -544,7 +548,7 @@ export default HomePage
 
 ```
 
-- Edit `src/shared/component/page/hello.jsx` like so:
+- `src/shared/component/page/hello.jsx` を次のように編集します:
 
 ```js
 // @flow
@@ -574,7 +578,7 @@ const HelloPage = () =>
 export default HelloPage
 ```
 
-- Edit `src/shared/component/page/hello-async.jsx` like so:
+- `src/shared/component/page/hello-async.jsx` を次のように編集します:
 
 ```js
 // @flow
@@ -605,7 +609,7 @@ export default HelloAsyncPage
 
 ```
 
-- Edit `src/shared/component/page/not-found.jsx` like so:
+- `src/shared/component/page/not-found.jsx` を次のように編集します:
 
 ```js
 // @flow
@@ -631,9 +635,13 @@ export default NotFoundPage
 ```
 
 The `<Helmet>` component doesn't actually render anything, it just injects content in the `head` of your document and exposes the same data to the server.
+`<Helmet>` コンポーネントは単に `head` の項目をレンダリング結果に挿入します。こうすることでサーバー側でも `head` の項目を動的に変更することが出来ます。
 
 🏁 Run `yarn start` and `yarn dev:wds` and navigate between pages. The title on your tab should change when you navigate, and it should also stay the same when you refresh the page. Show the source of the page to see how React Helmet sets the `title` and `meta` tags even for server-side rendering.
+🏁 `yarn start` と `yarn dev:wds` を実行して、ページ間を移動してみましょう。 ブラウザのタブを見てページを移動するたびにタイトルが変わっていることや、更新しても同じページが表示されることを確認しましょう。ページのソースを開いて、サーバーサイドレンダリングにおいて `title` や `meta` が正しく挿入されていることを確認しましょう。
 
 Next section: [07 - Socket.IO](07-socket-io.md#readme)
+次の章: [07 - Socket.IO](07-socket-io.md#readme)
 
 Back to the [previous section](05-redux-immutable-fetch.md#readme) or the [table of contents](https://github.com/verekia/js-stack-from-scratch#table-of-contents).
+[前の章](05-redux-immutable-fetch.md#readme)に戻る。[目次](https://github.com/verekia/js-stack-from-scratch#table-of-contents)に戻る。
