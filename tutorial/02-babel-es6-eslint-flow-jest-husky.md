@@ -1,12 +1,15 @@
 # 02 - Babel, ES6, ESLint, Flow, Jest, and Husky
 
 Code for this chapter available [here](https://github.com/verekia/js-stack-walkthrough/tree/master/02-babel-es6-eslint-flow-jest-husky).
+この章のコードは[こちら](https://github.com/verekia/js-stack-walkthrough/tree/master/02-babel-es6-eslint-flow-jest-husky)です．
 
 We're now going to use some ES6 syntax, which is a great improvement over the "old" ES5 syntax. All browsers and JS environments understand ES5 well, but not ES6. That's where a tool called Babel comes to the rescue!
+ここではES6を使っていきます．ES6は"古臭い"ES5のシンタックスよりも遥かに良くなっています．ES5は全てのブラウザが理解できますが，ES6は理解できません．この問題を解決するためにBabelを使います．
 
 ## Babel
 
 > 💡 **[Babel](https://babeljs.io/)** is a compiler that transforms ES6 code (and other things like React's JSX syntax) into ES5 code. It is very modular and can be used in tons of different [environments](https://babeljs.io/docs/setup/). It is by far the preferred ES5 compiler of the React community.
+> 💡 **[Babel](https://babeljs.io/)**はES6のコード（やReactのJSXのようなコード）をES5に変換するコンパイラです．非常に多くのモジュールがあり，様々な[環境](https://babeljs.io/docs/setup/)に適用することが出来ます．また，ES5コンパイラとしてReactコミュニティでは非常によく用いられています．
 
 - Move your `index.js` into a new `src` folder. This is where you will write your ES6 code. Remove the previous `color`-related code in `index.js`, and replace it with a simple:
 
