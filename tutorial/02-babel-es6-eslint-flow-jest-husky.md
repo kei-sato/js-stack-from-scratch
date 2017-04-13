@@ -12,6 +12,7 @@ We're now going to use some ES6 syntax, which is a great improvement over the "o
 > 💡 **[Babel](https://babeljs.io/)**はES6のコード（やReactのJSXのようなコード）をES5に変換するコンパイラです．非常に多くのモジュールがあり，様々な[環境](https://babeljs.io/docs/setup/)に適用することが出来ます．また，ES5コンパイラとしてReactコミュニティでは非常によく用いられています．
 
 - Move your `index.js` into a new `src` folder. This is where you will write your ES6 code. Remove the previous `color`-related code in `index.js`, and replace it with a simple:
+- `index.js`を新しく作った`src`フォルダに移動させましょう．ここにES6のコードを書いていきます．`index.js`の`color`に関する部分のコードを消して，シンプルにしましょう．:
 
 ```js
 const str = 'ES6'
@@ -19,18 +20,25 @@ console.log(`Hello ${str}`)
 ```
 
 We're using a *template string* here, which is an ES6 feature that lets us inject variables directly inside the string without concatenation using `${}`. Note that template strings are created using **backquotes**.
+ここでは*テンプレートリテラル*を使用しています．ES6から新たに導入された形式で，`${}`を使って文字列の中に変数の値を挿入することが出来ます．テンプレートリテラルは**バッククォート**で囲って作られます．
 
 - Run `yarn add --dev babel-cli` to install the CLI interface for Babel.
+- `yarn add --dev babel-cli` を実行してBabelのCLIインターフェースをインストールしましょう．
 
 Babel CLI comes with [two executables](https://babeljs.io/docs/usage/cli/): `babel`, which compiles ES6 files into new ES5 files, and `babel-node`, which you can use to replace your call to the `node` binary and execute ES6 files directly on the fly. `babel-node` is great for development but it is heavy and not meant for production. In this chapter we are going to use `babel-node` to set up the development environment, and in the next one we'll use `babel` to build ES5 files for production.
+Babel CLIには[2つの実行ファイル](https://babeljs.io/docs/usage/cli/)があります: １つは`babel`で，これを使うとES6をES5にコンパイルすることができます．もう一つは`babel-node`で，これを`node`の代わりに使うことで，ES6で書かれたファイルを直接実行することが出来ます．`bebel-node`は開発環境にとても向いていますが，若干重いので本番環境には向いていません．この章では`babel-node`を実行して開発環境をセットアップしていきますが，次の章では本番環境用に`babel`を実行してES5のファイルを生成します．
 
 - In `package.json`, in your `start` script, replace `node .` by `babel-node src` (`index.js` is the default file Node looks for, which is why we can omit `index.js`).
+- `package.json`の中の`start`の項目の`node .`を`babel-node src`で置き換えましょう（Nodeはデフォルトで`index.js`を実行するので，`index.js`は書かなくても大丈夫です）．
 
 If you try to run `yarn start` now, it should print the correct output, but Babel is not actually doing anything. That's because we didn't give it any information about which transformations we want to apply. The only reason it prints the right output is because Node natively understands ES6 without Babel's help. Some browsers or older versions of Node would not be so successful though!
+`yarn start`を実行してみましょう．期待通りに出力されたと思いますが，実はBabelは何もしていません．どのように変換するべきかという情報を与えていないからです．ではなぜ動いているかというと，NodeがBabelを使わずともデフォルトでES6を実行できるからです．しかし，一部のブラウザか古いNodeを使用している場合は期待通りの動作をしないかもしれません．
 
 - Run `yarn add --dev babel-preset-env` to install a Babel preset package called `env`, which contains configurations for the most recent ECMAScript features supported by Babel.
+- `yarn add --dev babel-preset-env`を実行して`env`というBabelのパッケージをインストールしましょう．BabelによってサポートされてるECMAScriptの最新機能が含まれています．
 
 - Create a `.babelrc` file at the root of your project, which is a JSON file for your Babel configuration. Write the following to it to make Babel use the `env` preset:
+- `.babelrc`というBabelの設定を書くJSONファイルをプロジェクトのルートに作成し，次のように編集して`env`を使えるようにしましょう:
 
 ```json
 {
@@ -41,6 +49,7 @@ If you try to run `yarn start` now, it should print the correct output, but Babe
 ```
 
 🏁 `yarn start` should still work, but it's actually doing something now. We can't really tell if it is though, since we're using `babel-node` to interpret ES6 code on the fly. You'll soon have a proof that your ES6 code is actually transformed when you reach the [ES6 modules syntax](#the-es6-modules-syntax) section of this chapter.
+🏁 `yarn start`を実行すると先ほどと同じく動作すると思いますが，今回は前回と違って確かに変換を行っています．`babel-node`を使ってES6コードを実行しているので，本当に変換されているのかまだ分からないかもしれません．この章の[ES6 modules syntax](#the-es6-modules-syntax)セクションでES6コードが確かに変換されているという確信が得られるでしょう．
 
 ## ES6
 
