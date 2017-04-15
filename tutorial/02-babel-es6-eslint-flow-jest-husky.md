@@ -54,10 +54,13 @@ If you try to run `yarn start` now, it should print the correct output, but Babe
 ## ES6
 
 > 💡 **[ES6](http://es6-features.org/)**: The most significant improvement of the JavaScript language. There are too many ES6 features to list them here but typical ES6 code uses classes with `class`, `const` and `let`, template strings, and arrow functions (`(text) => { console.log(text) }`).
+> 💡 **[ES6](http://es6-features.org/)**: JavaScript史上最も大きな変更です。ES6の機能は多すぎて全てを紹介することは出来ませんが、代表的なものとしては`class`でクラスを作成できること、`const`と`let`、テンプレートリテラル、そしてアロー関数（`(text) => { console.log(text) }`）があげられます。
 
 ### Creating an ES6 class
+### ES6でのクラスの作成
 
 - Create a new file, `src/dog.js`, containing the following ES6 class:
+- `src/dog.js`を新規作成し、次のようにES6クラスを作成しましょう:
 
 ```js
 class Dog {
