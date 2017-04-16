@@ -60,7 +60,7 @@ If you try to run `yarn start` now, it should print the correct output, but Babe
 ### ES6でのクラスの作成
 
 - Create a new file, `src/dog.js`, containing the following ES6 class:
-- `src/dog.js`を新規作成し、次のようにES6クラスを作成しましょう:
+- `src/dog.js`を新規作成し、ES6クラスを作ってみましょう:
 
 ```js
 class Dog {
@@ -77,8 +77,10 @@ module.exports = Dog
 ```
 
 It should not look surprising to you if you've done OOP in the past in any language. It's relatively recent for JavaScript though. The class is exposed to the outside world via the `module.exports` assignment.
+もし、あなたが他の言語で既にオブジェクト指向を学んでいるなら、なんてことない普通のコードだと思われると思いますが、JavaScriptではクラスが生成できるようになったのは比較的最近のことなのです。このクラスは`module.exports`を使うことで他のファイルから使えるようにすることが出来ます。
 
 In `src/index.js`, write the following:
+`src/index.js`を次のように編集します:
 
 ```js
 const Dog = require('./dog')
@@ -89,16 +91,22 @@ console.log(toby.bark())
 ```
 
 As you can see, unlike the community-made package `color` that we used before, when we require one of our files, we use `./` in the `require()`.
+このように、以前使用していた`color`のようなコミュニティで作られたパッケージと違い、自分で作ったファイルをインポートしたいときは`require()`の中で`./`を使います。
 
 🏁 Run `yarn start` and it should print "Wah wah, I am Toby".
+🏁 `yarn start`を実行してみましょう。"Wah wah, I am Toby"と出力されるはずです。
 
 ### The ES6 modules syntax
+### ES6モジュールの文法
 
 Here we simply replace `const Dog = require('./dog')` by `import Dog from './dog'`, which is the newer ES6 modules syntax (as opposed to "CommonJS" modules syntax). It is currently not natively supported by NodeJS, so this is your proof that Babel processes those ES6 files correctly.
+ここで`const Dog = require('./dog')`を`import Dog from './dog'`で置き換えてみましょう。これはES6モジュールの新しい機能で（"CommonJS"に対して）、現在NodeJSではサポートされていない機能なので、Babelが正しく動いている証拠になります。
 
 In `dog.js`, we also replace `module.exports = Dog` by `export default Dog`
+`dog.js`でも同じく`module.exports = Dog`を`export default Dog`で置き換えます
 
 🏁 `yarn start` should still print "Wah wah, I am Toby".
+🏁 `yarn start`を実行すると、先程と同じく"Wah wah, I am Toby"と出力されるはずです。
 
 ## ESLint
 
