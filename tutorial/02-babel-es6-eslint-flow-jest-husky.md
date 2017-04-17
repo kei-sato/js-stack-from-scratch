@@ -26,7 +26,7 @@ We're using a *template string* here, which is an ES6 feature that lets us injec
 - `yarn add --dev babel-cli` を実行してBabelのCLIインターフェースをインストールしましょう．
 
 Babel CLI comes with [two executables](https://babeljs.io/docs/usage/cli/): `babel`, which compiles ES6 files into new ES5 files, and `babel-node`, which you can use to replace your call to the `node` binary and execute ES6 files directly on the fly. `babel-node` is great for development but it is heavy and not meant for production. In this chapter we are going to use `babel-node` to set up the development environment, and in the next one we'll use `babel` to build ES5 files for production.
-Babel CLIには[2つの実行ファイル](https://babeljs.io/docs/usage/cli/)があります: １つは`babel`で，これを使うとES6をES5にコンパイルすることができます．もう一つは`babel-node`で，これを`node`の代わりに使うことで，ES6で書かれたファイルを直接実行することが出来ます．`bebel-node`は開発環境にとても向いていますが，若干重いので本番環境には向いていません．この章では`babel-node`を実行して開発環境をセットアップしていきますが，次の章では本番環境用に`babel`を実行してES5のファイルを生成します．
+BabelのCLIには[2つの実行ファイル](https://babeljs.io/docs/usage/cli/)があります: １つは`babel`で，これを使うとES6をES5にコンパイルすることができます．もう一つは`babel-node`で，これを`node`の代わりに使うことで，ES6で書かれたファイルを直接実行することが出来ます．`bebel-node`は開発環境にとても向いていますが，若干重いので本番環境には向いていません．この章では`babel-node`を実行して開発環境をセットアップしていきますが，次の章では本番環境用に`babel`を実行してES5のファイルを生成します．
 
 - In `package.json`, in your `start` script, replace `node .` by `babel-node src` (`index.js` is the default file Node looks for, which is why we can omit `index.js`).
 - `package.json`の中の`start`の項目の`node .`を`babel-node src`で置き換えましょう（Nodeはデフォルトで`index.js`を実行するので，`index.js`は書かなくても大丈夫です）．
@@ -111,20 +111,26 @@ In `dog.js`, we also replace `module.exports = Dog` by `export default Dog`
 ## ESLint
 
 > 💡 **[ESLint](http://eslint.org)** is the linter of choice for ES6 code. A linter gives you recommendations about code formatting, which enforces style consistency in your code, and code you share with your team. It's also a great way to learn about JavaScript by making mistakes that ESLint will catch.
+> 💡 **[ESLint](http://eslint.org)**はES6のコードに対するリンターです。リンターはコードの書き方に対して指摘をしてくれます。自分のコードだけではなく、チームで共有しているコードの一貫性を保つのに役立ちます。また、ESLintの指摘を受けることでJavaScriptのスキルも向上します。
 
 ESLint works with *rules*, and there are [many of them](http://eslint.org/docs/rules/). Instead of configuring the rules we want for our code ourselves, we will use the config created by Airbnb. This config uses a few plugins, so we need to install those as well.
+ESLintは[たくさんの](http://eslint.org/docs/rules/)*ルール*を組み合わせて使います。ここでは一からルールの組み合わせを作ることはせず、Airbnbによって作られた設定を使用します。この設定は追加でいくつかプラグインをインストールする必要があるので、インストールしていきます。
 
 Check out Airbnb's most recent [instructions](https://www.npmjs.com/package/eslint-config-airbnb) to install the config package and all its dependencies correctly. As of 2017-02-03, they recommend using the following command in your terminal:
+Airbnbの最新の[インストラクション](https://www.npmjs.com/package/eslint-config-airbnb)を参考にして、設定のパッケージと依存パッケージを正しくインストールしましょう。2017-02-03時点ではターミナルで下記のコマンドを実行することが推奨されています:
 
 ```sh
 npm info eslint-config-airbnb@latest peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs yarn add --dev eslint-config-airbnb@latest
 ```
 
 It should install everything you need and add `eslint-config-airbnb`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, and `eslint-plugin-react` to your `package.json` file automatically.
+これで必要なものが全てインストールされて、`eslint-config-airbnb`、`eslint-plugin-import`、`eslint-plugin-jsx-a11y`、`eslint-plugin-react`が`package.json`に自動的に追加されたはずです。
 
 **Note**: I've replaced `npm install` by `yarn add` in this command. Also, this won't work on Windows, so take a look at the `package.json` file of this repository and just install all the ESLint-related dependencies manually using `yarn add --dev packagename@^#.#.#` with `#.#.#` being the versions given in `package.json` for each package.
+**Note**: `npm install`の代わりに`yarn add`を使いましたが、これはWindowsでは正しく動作しません。Windowsの場合はこのレポジトリの`package.json`を見て、ESLintに関する全ての依存パッケージを`yarn add --dev packagename@^#.#.#`の`#.#.#`を`package.json`に書かれたパッケージそれぞれのバージョンで置き換えて実行して手動でインストールして下さい。
 
 - Create an `.eslintrc.json` file at the root of your project, just like we did for Babel, and write the following to it:
+- Babelの時と同じくプロジェクトのルートに`.eslintrc.json`を作成して次のように編集します:
 
 ```json
 {
@@ -133,10 +139,13 @@ It should install everything you need and add `eslint-config-airbnb`, `eslint-pl
 ```
 
 We'll create an NPM/Yarn script to run ESLint. Let's install the `eslint` package to be able to use the `eslint` CLI:
+ESLintを実行するためのNPM/Yarnスクリプトを作成します。`eslint`パッケージをインストールして`eslint`コマンドを使えるようにしましょう:
 
 - Run `yarn add --dev eslint`
+- `yarn add --dev eslint`を実行します
 
 Update the `scripts` of your `package.json` to include a new `test` task:
+`package.json`の`scripts`の中に`test`タスクを追加します:
 
 ```json
 "scripts": {
@@ -146,10 +155,13 @@ Update the `scripts` of your `package.json` to include a new `test` task:
 ```
 
 Here we just tell ESLint that want to lint all JavaScript files under the `src` folder.
+ESLintに`src`フォルダ以下の全てのJavaScriptファイルをリントするように指示しています。
 
 We will use this standard `test` task to run a chain of all the commands that validate our code, whether it's linting, type checking, or unit testing.
+この`test`タスクはリントや型チェックやユニットテストといった一連のコードの検証を実行するのに使います。
 
 - Run `yarn test`, and you should see a whole bunch of errors for missing semicolons, and a warning for using `console.log()` in `index.js`. Add `/* eslint-disable no-console */` at the top of our `index.js` file to allow the use of `console` in this file.
+- `yarn test`を実行すると、`index.js`の中に「セミコロンが無い」とか`console.log()`を使っているといったエラーがたくさん出てくるはずです。`/* eslint-disable no-console */`を`index.js`の先頭に追加して、このファイルの中で`console`を使用するのを許可しましょう。
 
 **Note**: If you're on Windows, make sure you configure your editor and Git to use Unix LF line endings and not Windows CRLF. If your project is only used in Windows environments, you can add `"linebreak-style": [2, "windows"]` in ESLint's `rules` array (see the example below) to enforce CRLF instead.
 
