@@ -164,14 +164,19 @@ We will use this standard `test` task to run a chain of all the commands that va
 - `yarn test`を実行すると、`index.js`の中に「セミコロンが無い」とか`console.log()`を使っているといったエラーがたくさん出てくるはずです。`/* eslint-disable no-console */`を`index.js`の先頭に追加して、このファイルの中で`console`を使用するのを許可しましょう。
 
 **Note**: If you're on Windows, make sure you configure your editor and Git to use Unix LF line endings and not Windows CRLF. If your project is only used in Windows environments, you can add `"linebreak-style": [2, "windows"]` in ESLint's `rules` array (see the example below) to enforce CRLF instead.
+**Note**: Windowsの場合はGitやテキストエディタではCRLFではなくて、LFを使うようにしましょう。もしWindows環境でしか開発しないというのであれば、ESLintの`rules`という配列の中に（下記の例のように）`"linebreak-style": [2, "windows"]`を追加して、CRLFを強制するようにしましょう。
 
 ### Semicolons
+### セミコロン
 
 Alright, this is probably the most heated debate in the JavaScript community, let's talk about it for a minute. JavaScript has this thing called Automatic Semicolon Insertion, which allows you to write your code with or without semicolons. It really comes down to personal preference and there is no right and wrong on this topic. If you like the syntax of Python, Ruby, or Scala, you will probably enjoy omitting semicolons. If you prefer the syntax of Java, C#, or PHP, you will probably prefer using semicolons.
+あらかじめ言っておきますが、これはJavaScriptコミュニティの中でも語ることが最も嫌われているトピックです。少しだけその話をします。JavaScriptには自動セミコロン挿入と呼ばれる機能があり、コードにセミコロンを使用しなくても良いことになっています。これに関してはどちらが良い悪いということはなく、単にどちらがあなたの（チームの）パフォーマンスを高められるかという問題です。Python、Ruby、Scalaのシンタックスに慣れている方であればセミコロンを使わない設定の方が良いでしょう。JavaやC#やPHPを使っている方であれば、セミコロンを使うほうが慣れているかもしれません。
 
 Most people write JavaScript with semicolons, out of habit. That was my case until I tried going semicolon-less after seeing code samples from the Redux documentation. At first it felt a bit weird, simply because I was not used to it. After just one day of writing code this way I could not see myself going back to using semicolons at all. They felt so cumbersome and unnecessary. A semicolon-less code is easier on the eyes in my opinion, and is faster to type.
+ほとんどの人がJavaScriptを書く時はセミコロンを使用することに慣れているでしょう。Reduxのドキュメントに書いてあるサンプルを見るまでは私もそうでした。最初は慣れていなかったので、少し違和感がありましたが、たった1日セミコロンを使用しないでコードを書いただけで、もはやセミコロンを使用するスタイルには戻れなくなってしまいました。とても冗長に感じてしまったのです。今ではセミコロンが無い方が見やすく、かつ早く書くことができます。
 
 I recommend reading the [ESLint documentation about semicolons](http://eslint.org/docs/rules/semi). As mentioned in this page, if you're going semicolon-less, there are some rather rare cases where semicolons are required. ESLint can protect you from such cases with the `no-unexpected-multiline` rule. Let's set up ESLint to safely go semicolon-less in `.eslintrc.json`:
+[セミコロンに関するESLintのドキュメント](http://eslint.org/docs/rules/semi)を一読することをおすすめします。ここで書かれているように、セミコロンレスでコーディングしていても、まれにセミコロンが必要とされるケースがあります。`no-unexpected-multiline`というルールを使うことで、ESLintがそういったケースからあなたを守ってくれます。ESLintを使って安全にセミコロンレスで開発できるように`.eslintrc.json`を編集しましょう:
 
 ```json
 {
